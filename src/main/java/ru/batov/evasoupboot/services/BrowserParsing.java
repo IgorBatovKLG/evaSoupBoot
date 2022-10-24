@@ -1,6 +1,7 @@
 package ru.batov.evasoupboot.services;
 
 
+import com.google.gson.Gson;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -9,6 +10,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Service;
 import ru.batov.evasoupboot.dao.DirectionDao;
 import ru.batov.evasoupboot.domain.Direction;
+import ru.batov.evasoupboot.domain.History;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -90,7 +92,8 @@ public class BrowserParsing {
         }
     }
 
-    public String dateInsertEva(String url) {
+    public String getHistoryDirection(String url) {
+        String history = "";
         String[] split = url.split("/");
         GetCookies cookies = new GetCookies();
         HashMap<String, String> cookies1 = cookies.getCookies();
@@ -100,17 +103,29 @@ public class BrowserParsing {
                     .cookies(cookies1)
                     .get();
 
-            Elements select = doc.select("#table-history > tbody");
-            Elements tr = select.select("tr");
-            for (Element element : tr) {
-                if (element.select("td").get(3).text().equals("Направление получено из РЭМД")) {
-                    return element.select("td").get(1).text();
-                }
-            }
+            Elements select = doc.select("body > script:nth-child(18)");
+            String data = select.get(0).data();
+            String substring = data.substring(21, data.length() - 2);
+            String[] split1 = substring.split("}];");
+            history = split1[0] + "}]";
+
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return "null";
+        return history;
+    }
+
+    public String dateInsertDirectionInEva(String historyDirection){
+        String date = "";
+        Gson gson = new Gson();
+        History[] historyDirections = gson.fromJson(historyDirection, History[].class);
+        for (History history : historyDirections) {
+            if (history.getAuthor().equals("SYSTEM_USER (МСЭ С.)")){
+                date = history.getDate();
+            }
+        }
+        System.out.println(date);
+        return date;
     }
 }
