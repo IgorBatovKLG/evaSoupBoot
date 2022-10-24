@@ -6,21 +6,22 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Service;
+import ru.batov.evasoupboot.domain.Direction;
 
 import java.io.IOException;
 import java.util.HashMap;
 
 @Service
-public class Main {
+public class BrowserParsing {
 
     private final ConfigurableApplicationContext context;
 
-    public Main(ConfigurableApplicationContext context) {
+    public BrowserParsing(ConfigurableApplicationContext context) {
         this.context = context;
     }
 
 
-    public void insertOrUpdateDirection() {
+    public void parsingDirection() {
 
         GetCookies cookies = new GetCookies();
         DateService dateService = new DateService();
@@ -44,11 +45,7 @@ public class Main {
                 System.out.println(tr.size());
                 for (int ii = 1; ii < tr.size(); ii++) {
                     Elements td = tr.get(ii).select("td");
-                    System.out.println(td.get(0).text());
-                    System.out.println(td.get(1).text());
-                    System.out.println(td.get(2).text());
-                    System.out.println(td.get(3).text());
-                    System.out.println(td.get(4).text());
+                    insertOrUpdateDirection(td);
                 }
             }
             System.out.println(p);
@@ -56,6 +53,29 @@ public class Main {
         } catch (IOException e) {
 
         }
+    }
+
+    public void insertOrUpdateDirection(Elements elements) {
+
+
+        Direction build = Direction.builder()
+                .url(elements.get(0).select("a").attr("href"))
+                .remdId(elements.get(2).text())
+                .regNum(elements.get(3).text())
+                .regDate(elements.get(4).text())
+                .Stage(elements.get(5).text())
+                .schedTime(elements.get(7).text())
+                .createTime(elements.get(8).text())
+                .refIssDate(elements.get(9).text())
+                .refOrgName(elements.get(10).text())
+                .refOrgOgrn(elements.get(11).text())
+                .fio(elements.get(12).text())
+                .birthDate(elements.get(13).text())
+                .repKind(elements.get(21).text())
+                .recDate(elements.get(22).text())
+                .build();
+        System.out.println(build);
+
     }
 
 
