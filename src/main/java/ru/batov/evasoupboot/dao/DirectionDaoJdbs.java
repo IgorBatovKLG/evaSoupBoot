@@ -41,7 +41,7 @@ public class DirectionDaoJdbs implements DirectionDao {
                     " values " +
                     "(:url, :remdId, :regNum, :regDate, :Stage, :createTime, :refIssDate, :refOrgName, :refOrgOgrn, :fio, :birthDate, :repKind, :recDate)", params);
 
-           }catch (UncategorizedSQLException e){
+        }catch (UncategorizedSQLException e){
             System.out.println(e.getMessage());
         }
     }
@@ -49,6 +49,15 @@ public class DirectionDaoJdbs implements DirectionDao {
     @Override
     public int getCountDirectionByUrl(String url){
         return jdbs.getJdbcOperations().queryForObject("select count(*) from Direction where url='"+url + "'", Integer.class);
+    }
+
+    @Override
+    public boolean getStatusDirectionByUrl(String url){
+        String s = jdbs.getJdbcOperations().queryForObject("select status from Direction where url='" + url + "'", String.class);
+        if (s.equals("Закрыто")) {
+            return false;
+        }
+        return true;
     }
 
     @Override

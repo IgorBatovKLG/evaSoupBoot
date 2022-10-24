@@ -11,7 +11,8 @@ public class EvaSoupBootApplication {
 
     public static void main(String[] args) {
         ConfigurableApplicationContext run = SpringApplication.run(EvaSoupBootApplication.class, args);
-        run.getBean(BrowserParsing.class).parsingDirection();
+        String s = run.getBean(BrowserParsing.class).dateInsertEva("http://dbs/eva/Documents/History/fbf7974a-1289-4a5a-824e-35983331a1a0");
+        System.out.println(s);
     }
 
 }

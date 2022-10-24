@@ -7,6 +7,8 @@ public interface DirectionDao {
 
     int getCountDirectionByUrl(String url);
 
+    boolean getStatusDirectionByUrl(String url);
+
     void updateDirection(Direction direction);
 
     Direction getDirectionByUrl(String url);
