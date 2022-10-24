@@ -15,7 +15,9 @@ import ru.batov.evasoupboot.domain.History;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @Service
 public class BrowserParsing {
@@ -85,17 +87,26 @@ public class BrowserParsing {
                 .build();
         if (directionDao.getCountDirectionByUrl(build.getUrl()) == 0) {
             directionDao.insertDirection(build);
+            for (History history : getHistoryDirection(build.getUrl())) {
+                if (history.getAuthor().equals("SYSTEM_USER (МСЭ С.)")){
+                   //todo Дата создания направления в бд добавить
+                }
+            }
         } else {
             if (directionDao.getStatusDirectionByUrl(build.getUrl())) {
                 directionDao.updateDirection(build);
             }
         }
+
     }
 
-    public String getHistoryDirection(String url) {
+    public ArrayList<History> getHistoryDirection(String url) {
+        ArrayList<History> histories = new ArrayList<>();
         String history = "";
         String[] split = url.split("/");
         GetCookies cookies = new GetCookies();
+        Gson gson = new Gson();
+
         HashMap<String, String> cookies1 = cookies.getCookies();
         try {
             Document doc = Jsoup.connect("http://dbs/eva/Documents/History/" + split[split.length - 1])
@@ -108,24 +119,13 @@ public class BrowserParsing {
             String substring = data.substring(21, data.length() - 2);
             String[] split1 = substring.split("}];");
             history = split1[0] + "}]";
+            History[] historyDirections = gson.fromJson(history, History[].class);
+            histories = new ArrayList<>(List.of(historyDirections));
 
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return history;
-    }
-
-    public String dateInsertDirectionInEva(String historyDirection){
-        String date = "";
-        Gson gson = new Gson();
-        History[] historyDirections = gson.fromJson(historyDirection, History[].class);
-        for (History history : historyDirections) {
-            if (history.getAuthor().equals("SYSTEM_USER (МСЭ С.)")){
-                date = history.getDate();
-            }
-        }
-        System.out.println(date);
-        return date;
+        return histories;
     }
 }
