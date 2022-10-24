@@ -11,7 +11,6 @@ public class Direction {
     private String regNum;
     private String regDate;
     private String Stage;
-    private String schedTime;
     private String createTime;
     private String refIssDate;
     private String refOrgName;

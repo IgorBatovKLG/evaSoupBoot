@@ -14,9 +14,12 @@ import java.util.HashMap;
 @Service
 public class BrowserParsing {
 
+    private final DateService dateService;
+
     private final ConfigurableApplicationContext context;
 
-    public BrowserParsing(ConfigurableApplicationContext context) {
+    public BrowserParsing(DateService dateService, ConfigurableApplicationContext context) {
+        this.dateService = dateService;
         this.context = context;
     }
 
@@ -60,19 +63,18 @@ public class BrowserParsing {
 
         Direction build = Direction.builder()
                 .url(elements.get(0).select("a").attr("href"))
-                .remdId(elements.get(2).text())
-                .regNum(elements.get(3).text())
-                .regDate(elements.get(4).text())
-                .Stage(elements.get(5).text())
-                .schedTime(elements.get(7).text())
-                .createTime(elements.get(8).text())
-                .refIssDate(elements.get(9).text())
-                .refOrgName(elements.get(10).text())
-                .refOrgOgrn(elements.get(11).text())
-                .fio(elements.get(12).text())
-                .birthDate(elements.get(13).text())
-                .repKind(elements.get(21).text())
-                .recDate(elements.get(22).text())
+                .remdId(elements.get(3).text())
+                .regNum(elements.get(4).text())
+                .regDate(dateService.toCorrectStringDate(elements.get(5).text()))
+                .Stage(elements.get(6).text())
+                .createTime(dateService.toCorrectStringDate(elements.get(8).text()))
+                .refIssDate(dateService.toCorrectStringDate(elements.get(9).text()))
+                .refOrgName(elements.get(11).text())
+                .refOrgOgrn(elements.get(12).text())
+                .fio(elements.get(13).text())
+                .birthDate(dateService.toCorrectStringDate(elements.get(14).text()))
+                .repKind(elements.get(22).text())
+                .recDate(dateService.toCorrectStringDate(elements.get(23).text()))
                 .build();
         System.out.println(build);
 

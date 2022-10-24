@@ -27,7 +27,6 @@ public class DirectionDaoJdbs implements DirectionDao {
         params.put("regNum",direction.getRegNum());
         params.put("regDate",direction.getRegDate());
         params.put("Stage",direction.getStage());
-        params.put("schedTime",direction.getSchedTime());
         params.put("createTime",direction.getCreateTime());
         params.put("refIssDate",direction.getRefIssDate());
         params.put("refOrgName",direction.getRefOrgName());
@@ -38,10 +37,11 @@ public class DirectionDaoJdbs implements DirectionDao {
         params.put("recDate",direction.getRecDate());
         try {
             jdbs.update("insert into Direction " +
-                    "(url, remdId, regNum, regDate, Stage, schedTime, createTime, refIssDate, refOrgName, refOrgOgrn, fio, birthDate, repKind, recDate)" +
+                    "(url, remdId, regNum, regDate, Stage, createTime, refIssDate, refOrgName, refOrgOgrn, fio, birthDate, repKind, recDate)" +
                     " values " +
-                    "(:url, :remdId, :regNum, :regDate, :Stage, :schedTime, :createTime, :refIssDate, :refOrgName, :refOrgOgrn, :fio, :birthDate, :repKind, :recDate)", params);
-        }catch (UncategorizedSQLException e){
+                    "(:url, :remdId, :regNum, :regDate, :Stage, :createTime, :refIssDate, :refOrgName, :refOrgOgrn, :fio, :birthDate, :repKind, :recDate)", params);
+
+           }catch (UncategorizedSQLException e){
             System.out.println(e.getMessage());
         }
     }
@@ -59,7 +59,6 @@ public class DirectionDaoJdbs implements DirectionDao {
         params.put("regNum",direction.getRegNum());
         params.put("regDate",direction.getRegDate());
         params.put("Stage",direction.getStage());
-        params.put("schedTime",direction.getSchedTime());
         params.put("createTime",direction.getCreateTime());
         params.put("refIssDate",direction.getRefIssDate());
         params.put("refOrgName",direction.getRefOrgName());
@@ -70,7 +69,7 @@ public class DirectionDaoJdbs implements DirectionDao {
         params.put("recDate",direction.getRecDate());
         try {
             jdbs.update("update Direction set " +
-                    "remdId=:remdId, regNum=:regNum, regDate=:regDate, Stage=:Stage, schedTime=:schedTime," +
+                    "remdId=:remdId, regNum=:regNum, regDate=:regDate, Stage=:Stage, " +
                     " createTime=:createTime, refIssDate=:refIssDate, refOrgName=:refOrgName, refOrgOgrn=:refOrgOgrn," +
                     " fio=:fio, birthDate=:birthDate, repKind=:repKind, recDate=:recDate" +
                     " where url=:url", params);
@@ -92,7 +91,6 @@ public class DirectionDaoJdbs implements DirectionDao {
             .regNum(rs.getString("regNum"))
             .regDate(rs.getString("regDate"))
             .Stage(rs.getString("Stage"))
-            .schedTime(rs.getString("schedTime"))
             .createTime(rs.getString("createTime"))
             .refIssDate(rs.getString("refIssDate"))
             .refOrgName(rs.getString("refOrgName"))

@@ -1,9 +1,12 @@
 package ru.batov.evasoupboot.services;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class DateService {
 
     public String toCorrectStringDate(String date) {
-        String dateCorrect = "Дата ведена некорректно";
+        String dateCorrect = "null";
         if (date.length()==10) {
             char[] chars = date.toCharArray();
             char[] news = new char[10];
